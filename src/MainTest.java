@@ -2,9 +2,11 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.highgui.VideoCapture;
 
+import com.gshoogeveen.imageprocessing.data.FPS;
 import com.gshoogeveen.imageprocessing.data.MatrixContainer;
 import com.gshoogeveen.imageprocessing.gui.Frame;
 import com.gshoogeveen.imageprocessing.gui.MatPanel;
+import com.gshoogeveen.imageprocessing.input.Screen;
 
 public class MainTest
 {
@@ -12,9 +14,6 @@ public class MainTest
 	{
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		VideoCapture cam = new VideoCapture(0);
-
-		Mat mat = new Mat();
-		cam.read(mat);
 		
 		MatrixContainer matrixContainer = new MatrixContainer();
 
@@ -22,20 +21,19 @@ public class MainTest
 		MatPanel p = new MatPanel(matrixContainer, "key");
 
 		f.add(p);
-
-		long start, elapsed;
+		
+		Mat newMat;
+		FPS fps = new FPS();
+		Screen screen = new Screen();
 		
 		while (true)
 		{
+			fps.start();
+			newMat = new Mat();
+			cam.retrieve(newMat);
+			matrixContainer.addMatrix("key", screen.readMat());
+			fps.show();
 
-			start = System.nanoTime();
-			cam.read(mat);
-			p.repaint();
-
-	        elapsed = System.nanoTime() - start;
-
-	        System.out.println("fps: "+elapsed / 1000000);
-			
 		}
 	}
 

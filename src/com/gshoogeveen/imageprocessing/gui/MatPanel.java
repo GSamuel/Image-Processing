@@ -25,13 +25,16 @@ public class MatPanel extends JPanel implements Observer
 	public MatPanel(MatrixContainer matrixContainer, String key)
 	{
 		this.matrixContainer = matrixContainer;
+		this.key = key;
 		matrixContainer.addObserver(this);
 	}
 
 	public void paintComponent(Graphics g)
 	{
-		g.drawImage(Utils.toBufferedImage(matrixContainer.getMatrix(key)), 0,
-				0, null);
+		Mat m = matrixContainer.getMatrix(key);
+		if (m.width() > 0 && m.height() > 0)
+			g.drawImage(Utils.toBufferedImage(matrixContainer.getMatrix(key)),
+					0, 0, null);
 	}
 
 	public void setMat(MatrixContainer matrixContainer)

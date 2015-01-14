@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 
 import org.opencv.core.Mat;
 
@@ -37,7 +38,13 @@ public class Screen implements PhotoInput
 	public Mat readMat()
 	{
 		if (robot != null)
-			return Utils.toMat(robot.createScreenCapture(screenRect));
+		{
+			BufferedImage img1 = robot.createScreenCapture(screenRect);
+			BufferedImage img = new BufferedImage(img1.getWidth(), img1.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+			img.getGraphics().drawImage(img1, 0, 0, null);
+			
+			return Utils.toMat(img);
+		}
 		else
 			return new Mat();
 	}
